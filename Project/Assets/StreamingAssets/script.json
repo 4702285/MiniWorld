@@ -2,6 +2,6 @@
   {
     "name":"lua",
     "extension":[".lua"],
-    "executor":"LuaScriptExecutor"
+    "executor":"lua_executor"
   }
 ]

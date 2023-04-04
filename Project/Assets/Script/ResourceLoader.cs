@@ -10,7 +10,7 @@ public class ResourceLoader
 
     public bool Load(string uri, LoadCallback cb, object param)
     {
-        MainApplication.Inst.StartCoroutine(LoadAsset(uri, cb, param));
+        main_application.inst.StartCoroutine(LoadAsset(uri, cb, param));
         return true;
     }
 

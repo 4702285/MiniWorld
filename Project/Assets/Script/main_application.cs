@@ -7,17 +7,17 @@ using System.Text;
 using System.IO;
 using EnvVar;
 
-public class MainApplication : MonoBehaviour
+public class main_application : MonoBehaviour
 {
-    private static MainApplication __inst = null;
+    private static main_application __inst = null;
 
-    public static MainApplication Inst
+    public static main_application inst
     {
         get
         {
             if (null == __inst)
             {
-                GameObject go = new GameObject("MainGame", typeof(MainApplication));
+                GameObject go = new GameObject("MainGame", typeof(main_application));
             }
             return __inst;
 
@@ -25,7 +25,7 @@ public class MainApplication : MonoBehaviour
     }
 
     private ResourceLoader mResLoader;
-    private ScriptFactory mScriptFactory;
+    private script_factory m_script_factory;
     private ValueParser mVP = new ValueParser();
     private mwt.Log mLogger = new mwt.Log();
 
@@ -55,12 +55,12 @@ public class MainApplication : MonoBehaviour
         mEnvirVariables.Add("StreamingAssets", Application.streamingAssetsPath);
         mEnvirVariables.Add("DataPath", Application.dataPath);
         mEnvirVariables.Add("PersistentPath", Application.persistentDataPath);
-        string project_path = mwt.PathUtil.TrimSepEnd(Path.GetDirectoryName(Application.dataPath));
+        string project_path = mwt.path_util.trim_sep_end(Path.GetDirectoryName(Application.dataPath));
         mEnvirVariables.Add("ProjectPath", project_path);
-        mEnvirVariables.Add("RootPath", mwt.PathUtil.TrimSepEnd(Path.GetDirectoryName(project_path)));
+        mEnvirVariables.Add("RootPath", mwt.path_util.trim_sep_end(Path.GetDirectoryName(project_path)));
 
-        mScriptFactory = new ScriptFactory();
-        mScriptFactory.Init("script.json");
+        m_script_factory = new script_factory();
+        m_script_factory.Init("script.json");
 
 
         return true;
@@ -98,7 +98,7 @@ public class MainApplication : MonoBehaviour
         string start = ValueParser.GetVariable("START_SCRIPT");
         if (!string.IsNullOrEmpty(start))
         {
-            mScriptFactory.Run(start);
+            m_script_factory.Run(start);
         }
 
         return true;

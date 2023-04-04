@@ -22,52 +22,52 @@ namespace mwt
 
         public static void verbose(string fmt, params object [] args)
         {
-            MainApplication.Inst.Log.trace(VERBOSE, format(VERBOSE, fmt, args));
+            main_application.inst.Log.trace(VERBOSE, format(VERBOSE, fmt, args));
         }
 
         public static void debug(string fmt, params object [] args)
         {
-            MainApplication.Inst.Log.trace(DEBUG, format(DEBUG, fmt, args));
+            main_application.inst.Log.trace(DEBUG, format(DEBUG, fmt, args));
         }
 
         public static void detail(string fmt, params object [] args)
         {
-            MainApplication.Inst.Log.trace(DETAIL, format(DETAIL, fmt, args));
+            main_application.inst.Log.trace(DETAIL, format(DETAIL, fmt, args));
         }
 
         public static void info(string fmt, params object [] args)
         {
-            MainApplication.Inst.Log.trace(INFO, format(DETAIL, fmt, args));
+            main_application.inst.Log.trace(INFO, format(DETAIL, fmt, args));
         }
 
         public static void log(string fmt, params object[] args)
         {
-            MainApplication.Inst.Log.trace(LOG, format(LOG, fmt, args));
+            main_application.inst.Log.trace(LOG, format(LOG, fmt, args));
         }
 
         public static void notice(string fmt, params object [] args)
         {
-            MainApplication.Inst.Log.trace(NOTICE, format(NOTICE, fmt, args));
+            main_application.inst.Log.trace(NOTICE, format(NOTICE, fmt, args));
         }
 
         public static void emphase(string fmt, params object [] args)
         {
-            MainApplication.Inst.Log.trace(EMPHASE, format(EMPHASE, fmt, args));
+            main_application.inst.Log.trace(EMPHASE, format(EMPHASE, fmt, args));
         }
 
         public static void warning(string fmt, params object [] args)
         {
-            MainApplication.Inst.Log.trace(WARNING, format(WARNING, fmt, args));
+            main_application.inst.Log.trace(WARNING, format(WARNING, fmt, args));
         }
 
         public static void fault(string fmt, params object [] args)
         {
-            MainApplication.Inst.Log.trace(FAULT, format(FAULT, fmt, args));
+            main_application.inst.Log.trace(FAULT, format(FAULT, fmt, args));
         }
 
         public static void error(string fmt, params object [] args)
         {
-            MainApplication.Inst.Log.trace(ERROR, format(ERROR, fmt, args));
+            main_application.inst.Log.trace(ERROR, format(ERROR, fmt, args));
         }
 
         [NoToLua]

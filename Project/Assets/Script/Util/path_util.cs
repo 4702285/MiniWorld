@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace mwt
 {
-    public class PathUtil
+    public class path_util
     {
-        public static string TrimSepEnd(string uri)
+        public static string trim_sep_end(string uri)
         {            
             int pos = uri.Length - 1;
-            while (IsSep(uri[pos])) --pos;
+            while (is_sep(uri[pos])) --pos;
             if (pos < uri.Length - 1)
                 return uri.Substring(0, pos);
             return uri;
         }
 
-        public static bool IsSep(char ch)
+        public static bool is_sep(char ch)
         {
             //判断字符是否是路径分隔符号
             return ch == Path.DirectorySeparatorChar || ch == Path.AltDirectorySeparatorChar;

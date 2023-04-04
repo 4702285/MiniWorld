@@ -7,39 +7,39 @@ using System.Threading;
 
 namespace mwt
 {
-    public class AutoLocker : IDisposable
+    public class auto_locker : IDisposable
     {
-        private Object mObj = null;
-        private bool mIsLocked = false;
-        public AutoLocker(Object obj, int tick = 1)
+        private Object m_obj = null;
+        private bool m_is_locked = false;
+        public auto_locker(Object obj, int tick = 1)
         {
-            mObj = obj;
+            m_obj = obj;
             Lock(tick);
         }
         public void Dispose()
         {
-            if (mIsLocked)
+            if (m_is_locked)
             {
                 Release();
             }
-            mObj = null;
+            m_obj = null;
         }
 
         public void Release()
         {
-            Monitor.Exit(mObj);
-            mIsLocked = false;
+            Monitor.Exit(m_obj);
+            m_is_locked = false;
         }
 
         public void Lock(int tick)
         {
-            if (mIsLocked)
+            if (m_is_locked)
                 return ;
-            while(null != mObj)
+            while(null != m_obj)
             {
-                if (Monitor.TryEnter(mObj, tick))
+                if (Monitor.TryEnter(m_obj, tick))
                 {
-                    mIsLocked = true;
+                    m_is_locked = true;
                     break;
                 }
             }

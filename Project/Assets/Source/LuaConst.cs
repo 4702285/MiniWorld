@@ -5,12 +5,12 @@ public static class LuaConst
     //lua逻辑代码目录
     public static string luaDir
     {
-        get { return MainApplication.Inst.GetVariable("LUA_DIR") + "/Lua"; }
+        get { return main_application.inst.GetVariable("LUA_DIR") + "/Lua"; }
     }
     //tolua lua文件目录
     public static string toluaDir
     {
-        get { return MainApplication.Inst.GetVariable("LUA_DIR") + "/ToLua"; }
+        get { return main_application.inst.GetVariable("LUA_DIR") + "/ToLua"; }
     }
 
 #if UNITY_STANDALONE

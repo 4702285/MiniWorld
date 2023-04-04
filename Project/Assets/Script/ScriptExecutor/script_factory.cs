@@ -8,23 +8,23 @@ using System.IO;
 using LitJson;
 using mwt;
 
-class ScriptFactory
+class script_factory
 {
-    class ExecutorDesc
+    class executor_desc
     {
         public string name;
         public List<string> extension;
         public string executor;
     }
-    class ExecutorInfo
+    class executor_info
     {
-        public ExecutorDesc desc;
+        public executor_desc desc;
         public Type type;
-        public IScriptExecutor executor;
+        public script_executor executor;
     };
 
     // 执行器表
-    private Dictionary<string, ExecutorInfo> mExecutors = new Dictionary<string, ExecutorInfo>();
+    private Dictionary<string, executor_info> mExecutors = new Dictionary<string, executor_info>();
     // 对象是否初始化完成
     private bool mInitialized = false;
     // 缓存脚本
@@ -33,20 +33,20 @@ class ScriptFactory
     public bool LoadConfig(string url)
     {
         mInitialized = false;
-        return MainApplication.Inst.Resource.Load(url, (path, handler, param)=> {
+        return main_application.inst.Resource.Load(url, (path, handler, param)=> {
             if (null == handler || !handler.isDone)
                 return true;
-            ScriptFactory _this = param as ScriptFactory;
+            script_factory _this = param as script_factory;
             JsonData config = JsonMapper.ToObject(handler.text);
-            Dictionary<string, ExecutorInfo> executors = new Dictionary<string, ExecutorInfo>();
+            Dictionary<string, executor_info> executors = new Dictionary<string, executor_info>();
             foreach(JsonData item in config)
             {
-                ExecutorDesc desc = new ExecutorDesc();
+                executor_desc desc = new executor_desc();
                 desc.name = (string)item["name"];
                 desc.executor = (string)item["executor"];
                 desc.extension = new List<string>();
                 foreach (JsonData ext in item["extension"]) { desc.extension.Add((string)ext); }
-                ExecutorInfo info = new ExecutorInfo();
+                executor_info info = new executor_info();
                 info.desc = desc;
                 info.type = Type.GetType(desc.executor);
                 if (null == info.type)
@@ -76,7 +76,7 @@ class ScriptFactory
             mCached.Add(uri);
             return true;
         }
-        ExecutorInfo exec = GetExecutor(uri);
+        executor_info exec = GetExecutor(uri);
         if (null == exec)
         {
             Log.error("{0}: not fount exexutor.",uri);
@@ -87,13 +87,13 @@ class ScriptFactory
             if (!InitExecutor(exec))
                 return false;
         }
-        return exec.executor.Run(uri);
+        return exec.executor.run(uri);
     }
 
-    private ExecutorInfo GetExecutor(string uri)
+    private executor_info GetExecutor(string uri)
     {
         string ext = Path.GetExtension(uri).ToLower();
-        foreach(KeyValuePair<string, ExecutorInfo> kv in mExecutors)
+        foreach(KeyValuePair<string, executor_info> kv in mExecutors)
         {
             if (kv.Value.desc.extension.Contains(ext))
             {
@@ -103,11 +103,11 @@ class ScriptFactory
         return null;
     }
 
-    private bool InitExecutor(ExecutorInfo exec)
+    private bool InitExecutor(executor_info exec)
     {
-        exec.executor = exec.type.Assembly.CreateInstance(exec.desc.executor) as IScriptExecutor;
+        exec.executor = exec.type.Assembly.CreateInstance(exec.desc.executor) as script_executor;
         if (null == exec.executor)
             return false;
-        return exec.executor.Init();
+        return exec.executor.init();
     }
 }

@@ -47,7 +47,7 @@ namespace EnvVar
 
         public string GetVariable(string name)
         {
-            string val = MainApplication.Inst.GetVariable(name);
+            string val = main_application.inst.GetVariable(name);
             if (string.IsNullOrEmpty(val))
                 return "";
             return GetValue(val);

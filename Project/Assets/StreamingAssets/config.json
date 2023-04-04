@@ -1,0 +1,7 @@
+{
+  "variable":{
+    "LUA_PATH":"${SCRIPT_DIR}/ToLua;${SCRIPT_DIR}/Lua",
+    "SCRIPT_DIR":"${RootPath}/Script",
+    "START_SCRIPT":"main.lua"
+  }
+}

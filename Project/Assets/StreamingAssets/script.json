@@ -1,0 +1,7 @@
+[
+  {
+    "name":"lua",
+    "extension":[".lua"],
+    "executor":"LuaScriptExecutor"
+  }
+]

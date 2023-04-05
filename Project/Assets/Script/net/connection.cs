@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace mwt
 {
@@ -10,9 +11,9 @@ namespace mwt
     {
         public abstract bool connect(string ip, int port);
 
-        public abstract bool bind(int port);
+        public abstract bool bind(string ip, int port);
 
-        public abstract connection accept();
+        public abstract connection accept(IAsyncResult ar);
 
         public abstract bool send(byte[] data);
 

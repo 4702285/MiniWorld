@@ -70,6 +70,12 @@ namespace mwt
             main_application.inst.Log.trace(ERROR, format(ERROR, fmt, args));
         }
 
+        public static void exception(Exception ex)
+        {
+            main_application.inst.Log.trace(ERROR, ex.Message+"\n"+ex.Source+"\n"+ex.StackTrace, false, false);
+            
+        }
+
         [NoToLua]
         public static string format(int lv, string fmt, params object [] args)
         {

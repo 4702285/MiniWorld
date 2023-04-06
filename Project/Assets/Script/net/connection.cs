@@ -15,9 +15,9 @@ namespace mwt
 
         public abstract connection accept(IAsyncResult ar);
 
-        public abstract bool send(byte[] data);
+        public abstract bool send(byte[] data, int offset, int len);
 
-        public abstract byte [] recv();
+        public abstract bool recv();
 
         public abstract bool close();
     }

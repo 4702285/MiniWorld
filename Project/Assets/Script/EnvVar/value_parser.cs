@@ -5,16 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace EnvVar
+namespace mwt
 {
     /// <summary>
     /// 环境变量解释器，将字符串中的环境变量解析成对应的值，
     /// 运行嵌套，但是不能环形引用
     /// 环境变量格式： ${VarName}
     /// </summary>
-    public class ValueParser
+    public class value_parser
     {
-        public string GetValue(string exp)
+        public string get_value(string exp)
         {
             StringBuilder builder = new StringBuilder();
             int pos = exp.IndexOf('$');
@@ -35,7 +35,7 @@ namespace EnvVar
                     continue;
                 }
                 builder.Append(exp.Substring(prev_pos, pos - prev_pos));
-                builder.Append(GetVariable(exp.Substring(pos + 2, end_pos - pos - 2)));
+                builder.Append(get_variable(exp.Substring(pos + 2, end_pos - pos - 2)));
                 prev_pos = end_pos + 1;
                 pos = exp.IndexOf('$', prev_pos);
             }
@@ -45,12 +45,12 @@ namespace EnvVar
             return builder.ToString();
         }
 
-        public string GetVariable(string name)
+        public string get_variable(string name)
         {
-            string val = main_application.inst.GetVariable(name);
+            string val = main_application.inst.get_variable(name);
             if (string.IsNullOrEmpty(val))
                 return "";
-            return GetValue(val);
+            return get_value(val);
         }
     }
 }

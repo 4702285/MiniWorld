@@ -9,6 +9,7 @@ namespace mwt
 {
     class entity : script_component
     {
+
         private void Awake()
         {
         }
@@ -22,6 +23,7 @@ namespace mwt
         {
             
         }
+
 
     }
 }

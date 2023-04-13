@@ -33,6 +33,7 @@ public class DelegateFactory
 		dict.Add(typeof(System.Action<UnityEngine.AsyncOperation>), factory.System_Action_UnityEngine_AsyncOperation);
 		dict.Add(typeof(UnityEngine.AudioClip.PCMReaderCallback), factory.UnityEngine_AudioClip_PCMReaderCallback);
 		dict.Add(typeof(UnityEngine.AudioClip.PCMSetPositionCallback), factory.UnityEngine_AudioClip_PCMSetPositionCallback);
+		dict.Add(typeof(mwt.callback_load), factory.mwt_callback_load);
 
 		DelegateTraits<System.Action>.Init(factory.System_Action);
 		DelegateTraits<UnityEngine.Events.UnityAction>.Init(factory.UnityEngine_Events_UnityAction);
@@ -50,6 +51,7 @@ public class DelegateFactory
 		DelegateTraits<System.Action<UnityEngine.AsyncOperation>>.Init(factory.System_Action_UnityEngine_AsyncOperation);
 		DelegateTraits<UnityEngine.AudioClip.PCMReaderCallback>.Init(factory.UnityEngine_AudioClip_PCMReaderCallback);
 		DelegateTraits<UnityEngine.AudioClip.PCMSetPositionCallback>.Init(factory.UnityEngine_AudioClip_PCMSetPositionCallback);
+		DelegateTraits<mwt.callback_load>.Init(factory.mwt_callback_load);
 
 		TypeTraits<System.Action>.Init(factory.Check_System_Action);
 		TypeTraits<UnityEngine.Events.UnityAction>.Init(factory.Check_UnityEngine_Events_UnityAction);
@@ -67,6 +69,7 @@ public class DelegateFactory
 		TypeTraits<System.Action<UnityEngine.AsyncOperation>>.Init(factory.Check_System_Action_UnityEngine_AsyncOperation);
 		TypeTraits<UnityEngine.AudioClip.PCMReaderCallback>.Init(factory.Check_UnityEngine_AudioClip_PCMReaderCallback);
 		TypeTraits<UnityEngine.AudioClip.PCMSetPositionCallback>.Init(factory.Check_UnityEngine_AudioClip_PCMSetPositionCallback);
+		TypeTraits<mwt.callback_load>.Init(factory.Check_mwt_callback_load);
 
 		StackTraits<System.Action>.Push = factory.Push_System_Action;
 		StackTraits<UnityEngine.Events.UnityAction>.Push = factory.Push_UnityEngine_Events_UnityAction;
@@ -84,6 +87,7 @@ public class DelegateFactory
 		StackTraits<System.Action<UnityEngine.AsyncOperation>>.Push = factory.Push_System_Action_UnityEngine_AsyncOperation;
 		StackTraits<UnityEngine.AudioClip.PCMReaderCallback>.Push = factory.Push_UnityEngine_AudioClip_PCMReaderCallback;
 		StackTraits<UnityEngine.AudioClip.PCMSetPositionCallback>.Push = factory.Push_UnityEngine_AudioClip_PCMSetPositionCallback;
+		StackTraits<mwt.callback_load>.Push = factory.Push_mwt_callback_load;
 	}
     
     public static Delegate CreateDelegate(Type t, LuaFunction func = null)
@@ -1112,6 +1116,67 @@ public class DelegateFactory
 	}
 
 	void Push_UnityEngine_AudioClip_PCMSetPositionCallback(IntPtr L, UnityEngine.AudioClip.PCMSetPositionCallback o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class mwt_callback_load_Event : LuaDelegate
+	{
+		public mwt_callback_load_Event(LuaFunction func) : base(func) { }
+		public mwt_callback_load_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(string param0, object param1, object param2)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.Push(param1);
+			func.Push(param2);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(string param0, object param1, object param2)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.Push(param1);
+			func.Push(param2);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public mwt.callback_load mwt_callback_load(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			mwt.callback_load fn = delegate(string param0, object param1, object param2) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			mwt_callback_load_Event target = new mwt_callback_load_Event(func);
+			mwt.callback_load d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			mwt_callback_load_Event target = new mwt_callback_load_Event(func, self);
+			mwt.callback_load d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_mwt_callback_load(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType<mwt.callback_load>(L, pos);
+	}
+
+	void Push_mwt_callback_load(IntPtr L, mwt.callback_load o)
 	{
 		ToLua.Push(L, o);
 	}

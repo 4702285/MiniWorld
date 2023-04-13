@@ -24,20 +24,21 @@ class script_factory
     };
 
     // 执行器表
-    private Dictionary<string, executor_info> mExecutors = new Dictionary<string, executor_info>();
+    private Dictionary<string, executor_info> m_executors = new Dictionary<string, executor_info>();
     // 对象是否初始化完成
-    private bool mInitialized = false;
+    private bool m_initialized = false;
     // 缓存脚本
-    private List<string> mCached = new List<string>();
+    private List<string> m_cached = new List<string>();
 
-    public bool LoadConfig(string url)
+    public bool loadconfig(string url)
     {
-        mInitialized = false;
-        return main_application.inst.Resource.Load(url, (path, handler, param)=> {
-            if (null == handler || !handler.isDone)
-                return true;
+        m_initialized = false;
+        return main_application.inst.resource.load_stream(url, resourceloader.PRIO_IMM, (path, obj, param)=> {
+            byte[] data = obj as byte[];
+            if (null == data || data.Length == 0)
+                return ;
             script_factory _this = param as script_factory;
-            JsonData config = JsonMapper.ToObject(handler.text);
+            JsonData config = JsonMapper.ToObject(Encoding.UTF8.GetString(data));
             Dictionary<string, executor_info> executors = new Dictionary<string, executor_info>();
             foreach(JsonData item in config)
             {
@@ -53,27 +54,26 @@ class script_factory
                     continue;
                 executors.Add(info.desc.name, info);
             }
-            _this.mExecutors = executors;
-            _this.mInitialized = true;
-            while(_this.mCached.Count > 0)
+            _this.m_executors = executors;
+            _this.m_initialized = true;
+            while(_this.m_cached.Count > 0)
             {
-                _this.Run(mCached[0]);
-                mCached.RemoveAt(0);
+                _this.run(m_cached[0]);
+                m_cached.RemoveAt(0);
             }
-            return true;
         }, this);
     }
 
-    public bool Init(string uri)
+    public bool init(string uri)
     {
-        return LoadConfig(uri);
+        return loadconfig(uri);
     }
 
-    public bool Run(string uri)
+    public bool run(string uri)
     {
-        if (!mInitialized)
+        if (!m_initialized)
         {
-            mCached.Add(uri);
+            m_cached.Add(uri);
             return true;
         }
         executor_info exec = GetExecutor(uri);
@@ -93,7 +93,7 @@ class script_factory
     private executor_info GetExecutor(string uri)
     {
         string ext = Path.GetExtension(uri).ToLower();
-        foreach(KeyValuePair<string, executor_info> kv in mExecutors)
+        foreach(KeyValuePair<string, executor_info> kv in m_executors)
         {
             if (kv.Value.desc.extension.Contains(ext))
             {

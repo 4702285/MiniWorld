@@ -38,13 +38,13 @@ public class lua_executor : script_executor
         m_state.OpenLibs(LuaDLL.luaopen_cjson_safe);
         m_state.LuaSetField(-2, "cjson.safe");
 
-        string lua_path = main_application.inst.GetVariable("LUA_PATH");
+        string lua_path = main_application.inst.get_variable("LUA_PATH");
         if (!string.IsNullOrEmpty(lua_path))
         {
             string[] path_list = lua_path.Split(';');
             foreach (string path in path_list)
             {
-                m_state.AddSearchPath(main_application.inst.ValueParser.GetValue(path));
+                m_state.AddSearchPath(main_application.inst.parser.get_value(path));
             }
         }
 

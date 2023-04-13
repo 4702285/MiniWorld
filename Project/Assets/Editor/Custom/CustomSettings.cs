@@ -176,6 +176,8 @@ public static class CustomSettings
         _GT(typeof(LuaProfiler)),
 
         _GT(typeof(mwt.Log)),
+        _GT(typeof(main_application)),
+        _GT(typeof(mwt.resourceloader)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

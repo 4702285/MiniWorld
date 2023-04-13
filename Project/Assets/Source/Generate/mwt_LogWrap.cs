@@ -17,6 +17,7 @@ public class mwt_LogWrap
 		L.RegFunction("warning", new LuaCSFunction(warning));
 		L.RegFunction("fault", new LuaCSFunction(fault));
 		L.RegFunction("error", new LuaCSFunction(error));
+		L.RegFunction("exception", new LuaCSFunction(exception));
 		L.RegFunction("New", new LuaCSFunction(_Createmwt_Log));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.RegConstant("ERROR", 10);
@@ -218,6 +219,22 @@ public class mwt_LogWrap
 			string arg0 = ToLua.CheckString(L, 1);
 			object[] arg1 = ToLua.ToParamsObject(L, 2, count - 1);
 			mwt.Log.error(arg0, arg1);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int exception(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			System.Exception arg0 = ToLua.CheckObject<System.Exception>(L, 1);
+			mwt.Log.exception(arg0);
 			return 0;
 		}
 		catch (Exception e)

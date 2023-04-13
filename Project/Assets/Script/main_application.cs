@@ -5,7 +5,8 @@ using UnityEngine.Networking;
 using LitJson;
 using System.Text;
 using System.IO;
-using EnvVar;
+using mwt;
+using LuaInterface;
 
 public class main_application : MonoBehaviour
 {
@@ -24,43 +25,46 @@ public class main_application : MonoBehaviour
         }
     }
 
-    private ResourceLoader mResLoader;
+    private resourceloader m_resloader;
     private script_factory m_script_factory;
-    private ValueParser mVP = new ValueParser();
+    private value_parser m_parser = new value_parser();
     private mwt.Log mLogger = new mwt.Log();
 
-    private Dictionary<string, string> mEnvirVariables = new Dictionary<string, string>();
+    private Dictionary<string, string> m_env_variables = new Dictionary<string, string>();
 
-    public ResourceLoader Resource
+    public resourceloader resource
     {
-        get { return mResLoader; }
+        get { return m_resloader; }
     }
 
-    public ValueParser ValueParser
+    public value_parser parser
     {
-        get { return mVP; }
+        get { return m_parser; }
     }
 
-    public mwt.Log Log
+    [NoToLua]
+    public Log Log
     {
         get { return mLogger; }
     }
 
     private bool Init()
     {
-        mResLoader = new ResourceLoader();
-
-        if (!Resource.Load("config.json", OnConfigLoaded, this))
+        m_resloader = new resourceloader();
+        if (!m_resloader.init())
             return false;
-        mEnvirVariables.Add("StreamingAssets", Application.streamingAssetsPath);
-        mEnvirVariables.Add("DataPath", Application.dataPath);
-        mEnvirVariables.Add("PersistentPath", Application.persistentDataPath);
+
+        if (!m_resloader.load_stream("config.json", resourceloader.PRIO_IMM, on_config_loaded, this))
+            return false;
+        m_env_variables.Add("StreamingAssets", Application.streamingAssetsPath);
+        m_env_variables.Add("DataPath", Application.dataPath);
+        m_env_variables.Add("PersistentPath", Application.persistentDataPath);
         string project_path = mwt.path_util.trim_sep_end(Path.GetDirectoryName(Application.dataPath));
-        mEnvirVariables.Add("ProjectPath", project_path);
-        mEnvirVariables.Add("RootPath", mwt.path_util.trim_sep_end(Path.GetDirectoryName(project_path)));
+        m_env_variables.Add("ProjectPath", project_path);
+        m_env_variables.Add("RootPath", mwt.path_util.trim_sep_end(Path.GetDirectoryName(project_path)));
 
         m_script_factory = new script_factory();
-        m_script_factory.Init("script.json");
+        m_script_factory.init("script.json");
 
 
         return true;
@@ -77,41 +81,41 @@ public class main_application : MonoBehaviour
         }
     }
 
-    private bool OnConfigLoaded(string uri, DownloadHandler h, object param)
+    private void on_config_loaded(string uri, object obj, object param)
     {
-        if (!h.isDone)
+        byte[] data = obj as byte[];
+        if (null == data || data.Length == 0)
         {
             Debug.LogErrorFormat("{0} : load application configuration failed.", uri);
-            return true;
+            return ;
         }
-        JsonData config = JsonMapper.ToObject(h.text);
+        JsonData config = JsonMapper.ToObject(Encoding.UTF8.GetString(data));
         if (null == config)
         {
             Debug.LogErrorFormat("{0} : Application configuration syntex is invalid.", uri);
-            return true;
+            return ;
         }
         if (config.ContainsKey("variable"))
         {
-            InitEnvironmentVariables(config["variable"]);
+            init_env_variables(config["variable"]);
         }
 
-        string start = ValueParser.GetVariable("START_SCRIPT");
+        string start = parser.get_variable("START_SCRIPT");
         if (!string.IsNullOrEmpty(start))
         {
-            m_script_factory.Run(start);
+            m_script_factory.run(start);
         }
 
-        return true;
     }
 
-    private bool InitEnvironmentVariables(JsonData var_list)
+    private bool init_env_variables(JsonData var_list)
     {
         if (!var_list.IsObject)
             return false;
 
         foreach(string key in var_list.Keys)
         {
-            mEnvirVariables.Add(key, (string)var_list[key]);
+            m_env_variables.Add(key, (string)var_list[key]);
         }
         return true;
     }
@@ -125,13 +129,13 @@ public class main_application : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        m_resloader.update();
     }
 
-    public string GetVariable(string name)
+    public string get_variable(string name)
     {
         string value;
-        if (mEnvirVariables.TryGetValue(name, out value))
+        if (m_env_variables.TryGetValue(name, out value))
             return value;
         return null;
     }

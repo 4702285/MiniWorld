@@ -10,36 +10,36 @@ namespace mwt
     public class auto_locker : IDisposable
     {
         private Object m_obj = null;
-        private bool m_is_locked = false;
+        private bool m_locked = false;
         public auto_locker(Object obj, int tick = 1)
         {
             m_obj = obj;
-            Lock(tick);
+            lock_impl(tick);
         }
         public void Dispose()
         {
-            if (m_is_locked)
+            if (m_locked)
             {
-                Release();
+                release();
             }
             m_obj = null;
         }
 
-        public void Release()
+        public void release()
         {
             Monitor.Exit(m_obj);
-            m_is_locked = false;
+            m_locked = false;
         }
 
-        public void Lock(int tick)
+        public void lock_impl(int tick)
         {
-            if (m_is_locked)
+            if (m_locked)
                 return ;
             while(null != m_obj)
             {
                 if (Monitor.TryEnter(m_obj, tick))
                 {
-                    m_is_locked = true;
+                    m_locked = true;
                     break;
                 }
             }

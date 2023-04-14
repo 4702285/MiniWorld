@@ -65,7 +65,7 @@ namespace mwt
 
         private void load_bundle()
         {
-            string full_path = resourceloader.bundle_path(m_url);
+            string full_path = path_util.bundle_path(m_url);
             m_request = UnityWebRequest.Get(full_path);
             if (null == m_request)
             {

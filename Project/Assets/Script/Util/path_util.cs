@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace mwt
 {
@@ -22,6 +23,11 @@ namespace mwt
         {
             //判断字符是否是路径分隔符号
             return ch == Path.DirectorySeparatorChar || ch == Path.AltDirectorySeparatorChar;
+        }
+
+        public static string bundle_path(string url)
+        {
+            return Path.Combine(Application.streamingAssetsPath, url);
         }
     }
 }

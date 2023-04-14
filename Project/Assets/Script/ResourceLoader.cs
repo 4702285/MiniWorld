@@ -289,11 +289,6 @@ namespace mwt
 
         }
 
-        public static string bundle_path(string url)
-        {
-            return Path.Combine(Application.streamingAssetsPath, url);
-        }
-
         private void on_assetbundle_loaded(string url, object obj, object param)
         {
             m_asset_bundles = new Dictionary<string, string>();
@@ -323,7 +318,7 @@ namespace mwt
 
         private IEnumerator load_bundleconfig(string url)
         {
-            string full_path = bundle_path(url);
+            string full_path = path_util.bundle_path(url);
             UnityWebRequest request = UnityWebRequest.Get(full_path);
             if (null == request)
             {

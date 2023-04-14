@@ -67,7 +67,7 @@ public class mwt_resourceloaderWrap
 		{
 			ToLua.CheckArgsCount(L, 1);
 			string arg0 = ToLua.CheckString(L, 1);
-			string o = mwt.resourceloader.bundle_path(arg0);
+			string o = mwt.path_util.bundle_path(arg0);
 			LuaDLL.lua_pushstring(L, o);
 			return 1;
 		}

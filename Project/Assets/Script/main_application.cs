@@ -18,7 +18,12 @@ public class main_application : MonoBehaviour
         {
             if (null == __inst)
             {
+                __inst = GameObject.FindObjectOfType<main_application>();
+                if (null != __inst)
+                    return __inst;
                 GameObject go = new GameObject("MainGame", typeof(main_application));
+                if (null == __inst)
+                    __inst = go.GetComponent<main_application>();
             }
             return __inst;
 
@@ -40,6 +45,11 @@ public class main_application : MonoBehaviour
     public value_parser parser
     {
         get { return m_parser; }
+    }
+
+    public script_factory scriptfactory
+    {
+        get { return m_script_factory; }
     }
 
     [NoToLua]

@@ -8,7 +8,7 @@ using System.IO;
 using LitJson;
 using mwt;
 
-class script_factory
+public class script_factory
 {
     class executor_desc
     {
@@ -88,6 +88,22 @@ class script_factory
                 return false;
         }
         return exec.executor.run(uri);
+    }
+
+    public scriptobject get_object(string name)
+    {
+        if (!m_initialized)
+            return null;
+        scriptobject obj;
+        foreach(KeyValuePair<string,executor_info> kv in m_executors)
+        {
+            if (null == kv.Value)
+                continue;
+            obj = kv.Value.executor.get(name);
+            if (null != obj)
+                return obj;
+        }
+        return null;
     }
 
     private executor_info GetExecutor(string uri)

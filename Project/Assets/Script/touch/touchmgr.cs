@@ -17,6 +17,11 @@ public class touchmgr : MonoBehaviour
     void Start()
     {
         m_mouse_point_prev = Input.mousePosition;
+        if (m_script == null)
+        {
+            if (null != main_application.inst.scriptfactory)
+                m_script = main_application.inst.scriptfactory.get_object("touchmgr");
+        }
     }
 
     // Update is called once per frame

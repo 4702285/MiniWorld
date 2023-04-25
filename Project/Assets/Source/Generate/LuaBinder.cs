@@ -68,6 +68,7 @@ public static class LuaBinder
 		L.BeginModule("mwt");
 		mwt_LogWrap.Register(L);
 		mwt_resourceloaderWrap.Register(L);
+		mwt_touchWrap.Register(L);
 		L.RegFunction("callback_load", new LuaCSFunction(mwt_callback_load));
 		L.EndModule();
 		L.BeginModule("System");

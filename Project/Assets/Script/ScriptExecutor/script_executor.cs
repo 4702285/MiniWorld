@@ -18,4 +18,6 @@ public abstract class script_executor
 
     public abstract void fixed_update(float delta, float unscaled);
 
+    public abstract mwt.scriptobject get(string name);
+
 }

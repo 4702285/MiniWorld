@@ -26,6 +26,8 @@ namespace mwt
 
         [NoToLua]
         public const int PRIO_IMM = 1000;
+        [NoToLua]
+        public const int PRIO_ENTITY = 200;
 
         private delegate bool asset_loader(string path, int priority, Type type, callback_load cb, object param);
 

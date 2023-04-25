@@ -8,7 +8,6 @@ public class mwt_resourceloaderWrap
 	{
 		L.BeginClass(typeof(mwt.resourceloader), typeof(System.Object));
 		L.RegFunction("load_asset", new LuaCSFunction(load_asset));
-		L.RegFunction("bundle_path", new LuaCSFunction(bundle_path));
 		L.RegFunction("New", new LuaCSFunction(_Createmwt_resourceloader));
 		L.RegFunction("__tostring", new LuaCSFunction(ToLua.op_ToString));
 		L.EndClass();
@@ -52,23 +51,6 @@ public class mwt_resourceloaderWrap
 			long arg4 = LuaDLL.tolua_checkint64(L, 6);
 			bool o = obj.load_asset(arg0, arg1, arg2, arg3, arg4);
 			LuaDLL.lua_pushboolean(L, o);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int bundle_path(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 1);
-			string arg0 = ToLua.CheckString(L, 1);
-			string o = mwt.path_util.bundle_path(arg0);
-			LuaDLL.lua_pushstring(L, o);
 			return 1;
 		}
 		catch (Exception e)

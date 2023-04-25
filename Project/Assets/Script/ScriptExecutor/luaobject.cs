@@ -33,5 +33,34 @@ namespace mwt
             m_functions.Add(func_name, func);
             return func;
         }
+
+        public override R get_value<R>(string key)
+        {
+            if (null == m_obj)
+                return default(R);
+            return m_obj.GetTable<R>(key);
+        }
+
+        public override void set_value<T>(string key, T value)
+        {
+            if (null == m_obj)
+                return;
+            m_obj.SetTable<T>(key, value);
+        }
+
+        public override R get_value<R>(int index)
+        {
+            if (null == m_obj)
+                return default(R);
+            return m_obj.RawGetIndex<R>(index);
+        }
+
+        public override void set_value<T>(int index, T value)
+        {
+            if (null == m_obj)
+                return;
+            m_obj.RawSetIndex<T>(index, value);
+        }
+
     }
 }

@@ -4,18 +4,13 @@ using UnityEngine;
 
 namespace mwt
 {
-    public class script_component : MonoBehaviour
+    public class script_component 
     {
-        // Start is called before the first frame update
-        protected void Start()
-        {
-            Log.log("create object {0}", GetType().Name);
-        }
+        private scriptobject m_obj;
 
-        // Update is called once per frame
-        void Update()
+        public script_component(scriptobject obj)
         {
-
+            m_obj = obj;
         }
     }
 

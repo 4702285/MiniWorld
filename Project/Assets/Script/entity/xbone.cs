@@ -55,7 +55,8 @@ namespace mwt
             if (null != m_parent)
             {
                 m_scale = Vector3.Scale(m_parent.scale, m_local_scale);
-                m_position = m_parent.position + m_parent.orient * (Vector3.Scale(m_parent.scale, m_local_position));
+                m_position = m_parent.position + m_parent.orient * 
+                    (Vector3.Scale(m_parent.scale, m_local_position));
                 m_orient = m_parent.orient * m_local_orient;
             }
             else

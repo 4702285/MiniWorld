@@ -7,23 +7,20 @@ using UnityEngine;
 
 namespace mwt
 {
-    class entity : script_component
+    public class entity : script_component
     {
+        private entityview m_view;
 
-        private void Awake()
+        public entityview view
         {
+            get { return m_view; }
+            set { m_view = value; }
         }
 
-        private void Start()
+        public entity(scriptobject obj):base(obj)
         {
-            base.Start();
+
         }
-
-        private void Update()
-        {
-            
-        }
-
-
+        
     }
 }

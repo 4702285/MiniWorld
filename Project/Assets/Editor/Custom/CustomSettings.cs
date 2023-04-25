@@ -178,6 +178,7 @@ public static class CustomSettings
         _GT(typeof(mwt.Log)),
         _GT(typeof(main_application)),
         _GT(typeof(mwt.resourceloader)),
+        _GT(typeof(mwt.touch)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

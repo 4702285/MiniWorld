@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using LuaInterface;
+using mwt;
 
 public class lua_executor : script_executor
 {
@@ -65,7 +66,7 @@ public class lua_executor : script_executor
                 m_state.DoFile(args[0]);
             }catch(Exception ex)
             {
-                Debug.LogException(ex);
+                Log.exception(ex);
                 return false;
             }
         }
@@ -81,7 +82,7 @@ public class lua_executor : script_executor
             m_state.DoFile(scriptfile);
         }catch(Exception ex)
         {
-            Debug.LogException(ex);
+            Log.exception(ex);
             return false;
         }
         return true;
@@ -99,7 +100,7 @@ public class lua_executor : script_executor
             func.Call();
         }catch(Exception ex)
         {
-            Debug.LogException(ex);
+            Log.exception(ex);
         }
     }
 
@@ -117,7 +118,7 @@ public class lua_executor : script_executor
             //mState.Collect();
         }catch(Exception ex)
         {
-            Debug.LogException(ex);
+            Log.exception(ex);
         }
     }
 
@@ -134,7 +135,7 @@ public class lua_executor : script_executor
             //mState.Collect();
         }catch(Exception ex)
         {
-            Debug.LogException(ex);
+            Log.exception(ex);
         }
     }
 
@@ -150,14 +151,32 @@ public class lua_executor : script_executor
             m_state.LuaPop(1);
         }catch(Exception ex)
         {
-            Debug.LogException(ex);
+            Log.exception(ex);
         }
+    }
+
+    public override scriptobject get(string name)
+    {
+        try
+        {
+            LuaTable obj = m_state.GetTable(name);
+            if (null == obj)
+                return null;
+            return new luaobject(obj);
+        }catch(Exception ex)
+        {
+            Log.exception(ex);
+        }
+        return null;
     }
 
     private void LuaError()
     {
         string errmsg = m_state.LuaToString(-1);
         m_state.LuaPop(2);
-        Debug.LogError(errmsg);
+        if (!string.IsNullOrEmpty(errmsg))
+        {
+            Log.error(errmsg);
+        }
     }
 }

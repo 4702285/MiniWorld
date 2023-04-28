@@ -29,6 +29,9 @@ namespace mwt
         [NoToLua]
         public const int PRIO_ENTITY = 200;
 
+        private const string bundleasset_path = "BundleAssets.json";
+        private const string assetbundle_path = "AssetBundle";
+
         private delegate bool asset_loader(string path, int priority, Type type, callback_load cb, object param);
 
         private asset_loader[] m_loader = null;
@@ -54,10 +57,17 @@ namespace mwt
                 load_from_bundle
             };
             m_loadermap = new Dictionary<string, resloader>();
-            load_stream("BundleAssets.json", PRIO_IMM, on_assetbundle_loaded, this);
-            main_application.inst.StartCoroutine(load_bundleconfig("AssetBundle"));
+            if (exists(bundleasset_path))
+                load_stream(bundleasset_path, PRIO_IMM, on_assetbundle_loaded, this);
+            if (exists(assetbundle_path))
+                main_application.inst.StartCoroutine(load_bundleconfig(assetbundle_path));
             m_inited = false;
             return true;
+        }
+
+        public bool exists(string url)
+        {
+            return File.Exists(Path.Combine(Application.streamingAssetsPath,url));
         }
 
         [NoToLua]

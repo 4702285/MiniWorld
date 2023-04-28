@@ -57,6 +57,8 @@ namespace mwt
 
         protected void invoke_callbacks()
         {
+            if (null == m_callbacks)
+                return;
             for(int index = 0; index < m_callbacks.Count; ++ index)
             {
                 if (null == m_callbacks[index].Key)
@@ -67,6 +69,8 @@ namespace mwt
 
         public void add_callback(callback_load cb, object param)
         {
+            if (null == m_callbacks)
+                m_callbacks = new List<KeyValuePair<callback_load, object>>();
             m_callbacks.Add(new KeyValuePair<callback_load, object>(cb, param));
         }
 

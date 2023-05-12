@@ -16,19 +16,29 @@ namespace mwt
             m_obj = obj;
             lock_impl(tick);
         }
+
+        ~auto_locker()
+        {
+            Dispose(false);
+        }
         public void Dispose()
         {
-            if (m_locked)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (m_locked && null != m_obj)
             {
-                release();
+                Monitor.Exit(m_obj);
             }
             m_obj = null;
+            m_locked = false;
         }
 
         public void release()
         {
-            Monitor.Exit(m_obj);
-            m_locked = false;
         }
 
         public void lock_impl(int tick)

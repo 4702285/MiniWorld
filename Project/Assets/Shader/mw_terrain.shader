@@ -1,60 +1,61 @@
-Shader "MiniWorld/Terrain" {
-    Properties {
-        _MainTex ("Texture", 2D) = "white" {}
-        _BumpMap ("Bump Map", 2D) = "bump" {}
-        _Specular ("Specular", Range(0, 1)) = 0.5
-        _Shininess ("Shininess", Range(0.01, 1)) = 0.078125
-        _CombineHeight ("Combine Height", Range(0, 1)) = 0
-        _TerrainSplat ("Terrain Splat", 2DArray) = "" {}
-        _SplatCount ("Number of Textures", Range(1, 8)) = 4
+Shader "MiniWorld/Terrain/Standard"
+{
+    Properties
+    {
+        [HideInInspector] _MainTex("BaseMap (RGB)", 2D) = "white" {}
+        [HideInInspector] _Color("Main Color", Color) = (1,1,1,1)
+        [HideInInspector] _TerrainHolesTexture("Holes Map(RGB)", 2D) = "white" {}
     }
- 
-    SubShader {
-        Tags { "Queue"="Geometry-100" }
-        LOD 100
- 
-        CGPROGRAM
-        #pragma surface surf Standard
-        #pragma require 2darray
-
-        #include "UnityCG.cginc"
- 
-        sampler2D _MainTex;
-        sampler2D _BumpMap;
-        float _Specular;
-        float _Shininess;
-        float _CombineHeight;
-        UNITY_DECLARE_TEX2DARRAY(_TerrainSplat);
-        int _SplatCount;
-
-        struct Input {
-            float2 uv_MainTex;
-            float3 worldPos;
-            float3 worldNormal;
-        };
+    SubShader
+    {
+        Tags { "Queue" = "Geometry-100" "RenderType"="Opaque"}
         
-        void surf (Input IN, inout SurfaceOutputStandard o) {
-            //获取高度图值,如果有的话
-            float height = tex2D(_BumpMap, IN.uv_MainTex).r;
-            //将高度的值和_CombineHeight结合
-            float combineHeight = lerp(0, 1, step(height, _CombineHeight));
+        CGPROGRAM
+        #pragma surface surf Standard vertex:SplatmapVert finalcolor:SplatmapFinalColor finalgbuffer:SplatmapFinalGBuffer addshadow fullforwardshadows
+        #pragma instancing_options assumeuniformscaling nomatrices nolightprobe nolightmap forwardadd
+        #pragma multi_compile_fog
+        #pragma target 3.0
+        #include "UnityPBSLighting.cginc"
 
-            // 获取地形的颜色，根据高度将多个纹理进行混合
-            float3 splat = float3(0, 0, 0);
-            for (int i = 0; i < _SplatCount; i++) {
-                float4 splatSample = UNITY_SAMPLE_TEX2DARRAY(_TerrainSplat, float3(IN.worldPos.xz, i));
-                float weight = splatSample.r * combineHeight;
-                splat += splatSample.bgr * weight;
-            }
+        #pragma multi_compile_local __ _ALPHATEST_ON
+        #pragma multi_compile_local __ _NORMALMAP
 
-            // 应用基本颜色和高光值
-            o.Albedo = splat;
-            o.Metallic = 0;
-            o.Smoothness = _Shininess;
-            //o.Specular = _Specular;
-            o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_MainTex));
+        #define TERRAIN_STANDARD_SHADER
+        #define TERRAIN_INSTANCED_PERPIXEL_NORMAL
+        #define TERRAIN_SURFACE_OUTPUT SurfaceOutputStandard
+        #include "TerrainSplatmapCommon.cginc"
+
+        half _Metallic0;
+        half _Metallic1;
+        half _Metallic2;
+        half _Metallic3;
+
+        half _Smoothness0;
+        half _Smoothness1;
+        half _Smoothness2;
+        half _Smoothness3;
+
+        void surf(Input IN, inout SurfaceOutputStandard o)
+        {
+            half4 splat_control;
+            half weight;
+            fixed4 mixedDiffuse;
+            half4 defaultSmoothness = half4(_Smoothness0, _Smoothness1, _Smoothness2, _Smoothness3);
+            SplatmapMix(IN, defaultSmoothness, splat_control, weight, mixedDiffuse, o.Normal);
+            o.Albedo = mixedDiffuse.rgb;
+            o.Alpha = weight;
+            o.Smoothness = mixedDiffuse.a;
+            o.Metallic = dot(splat_control, half4(_Metallic0, _Metallic1, _Metallic2, _Metallic3));
         }
         ENDCG
-    } 
-    FallBack "Diffuse"
+
+        UsePass "Hidden/Nature/Terrain/Utilities/PICKING"
+        UsePass "Hidden/Nature/Terrain/Utilities/SELECTION"
+    }
+
+    Dependency "AddPassShader" = "HIdden/TerrainEngine/Splatmap/Standard-AddPass"
+    Dependency "BaseMapShader" = "Hidden/TerrainEngine/Splatmap/Standard-Base"
+    Dependency "BaseMapGenShader" = "Hidden/TerrainEngine/Splatmap/Standard-BaseGen"
+
+    Fallback "Nature/Terrain/Diffuse"
 }
